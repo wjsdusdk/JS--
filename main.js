@@ -16,7 +16,7 @@ The quick brown fox jumps over the lazy dog.
 abbcccdddd
 `;
 
-// 1. 자바스크립트 정규식 생성과 플래그 (옵션)
+/* 1. 자바스크립트 정규식 생성과 플래그 (옵션) */
 
 // 생성자 함수 방식
 
@@ -69,7 +69,7 @@ console.log(str.match(regexp8)); // null
 const regexp9 = /\.$/gim;
 console.log(str.match(regexp9)); // ["."]
 
-// 2. 자바스크립트 메소드
+/* 2. 자바스크립트 메소드 */
 
 // 정규식.test(문자열) : 일치 여부(Boolean) 반환
 
@@ -122,3 +122,76 @@ thesecon@gmail.com
 https://www.omdbapi.com/?apikey=7035c60c&s=frozen
 The quick brown fox jumps over the lazy dog.
 abbcccdddd */
+
+/* 3. 패턴 (표현) */
+
+// ab$ : 줄(Line) 끝에 있는 ab와 일치
+console.log(str.match(/d$/g)); // null
+console.log(str.match(/d$/gm)); // ["d"]
+
+// ^ab : 줄(Line) 시작에 있는 ab와 일치
+console.log(str.match(/^t/gm)); // ["t"]
+console.log(str.match(/^t/gim)); // (2) ["t", "T"]
+
+// . : 임의의 한 문자와 일치
+console.log(str.match(/h..p/g)); // ["http"]
+
+// a|b : a 또는 b와 일치
+console.log(str.match(/fox|dog/g)); // (2) ["fox", "dog"]
+console.log(str.match(/fox|dog/)); // ["fox", ...]
+console.log(str.match(/dog|fox/)); // ["fox", ...]
+
+// ab? : b가 없거나 b와 일치 (b가 있을수도 있고 없을수도 있고)
+console.log(str.match(/thes/g)); // ["thes"]
+console.log(str.match(/thes?/g)); // (2) ["thes", "the"]
+
+// {3} | 3개 연속 일치
+console.log(str.match(/d{2}/)); // ["dd", ...]
+console.log(str.match(/d{2}/g)); // (2) ["dd", "dd"]
+
+// {3,} | 3개 이상 연속 일치
+console.log(str.match(/d{2,}/g)); // ["dddd"]
+
+// {3,5} | 3개 이상 5개 이하(3~5개) 연속 일치
+console.log(str.match(/d{2,3}/g)); // ["ddd"]
+
+// [abc] | a 또는 b 또는 c
+console.log(str.match(/[fox]/g)); // (12) ["o", "o", "o", "o", "f", "o", "o", "f", "o", "x", "o", "o"]
+
+// [a-z] | a부터 z 사이의 문자 구간에 일치 (영어 소문자)
+
+// [A-Z] | A부터 Z 사이의 문자 구간에 일치 (영어 대문자)
+
+// [0-9] | 0부터 9 사이의 문자 구간에 일치 (숫자)
+console.log(str.match(/[0-9]/g)); // (17) ["0", "1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "7", "0", "3", "5", "6", "0"]
+console.log(str.match(/[0-9]{1,}/g)); // (5) ["010", "1234", "5678", "7035", "60"]
+
+// [가-힣] | 가부터 힣 사이의 문자 구간에 일치 (한글)
+const str3 = `동해물과 백두산이 마르고 닳도록`
+console.log(str3.match(/[가-힣]/g)); // (14) ["동", "해", "물", "과", "백", "두", "산", "이", "마", "르", "고", "닳", "도", "록"]
+console.log(str3.match(/[가-힣]{1,}/g)); // (4) ["동해물과", "백두산이", "마르고", "닳도록"]
+
+// \w : 63개 문자(Word, 대소영문 52개 + 숫자 10개 + _)에 일치
+console.log(str.match(/\w{2,3}/g)); // (37) ["010", "123", "567", "the", "sec", ...] 
+
+// \b : 63개 문자에 일치하지 않는 문자 경계(Boundary)
+console.log(str.match(/\b\w{2,3}\b/g)); // (8) ["010", "com", "www", "com", "The", "fox", "the", "dog"]
+console.log(str.match(/\bf\w{1,}\b/g)); // (2) ["frozen", "fox"]   // 소문자 f로 시작하는 모든 영단어
+
+// /d | 숫자(Digit)에 일치
+console.log(str.match(/\d/g)); // (17) ["0", "1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "7", "0", "3", "5", "6", "0"]
+console.log(str.match(/\d{1,}/g)); // (5) ["010", "1234", "5678", "7035", "60"]
+
+// /s | 공백(Space, Tab 등)에 일치
+const h = `  the hello  world   !
+
+`
+console.log(str.match(/\s/g)); // (14) ["↵", "↵", "↵", "↵", " ", " ", " ", " ", " ", " ", " ", " ", "↵", "↵"]
+console.log(h.match(/\s/g)); // (10) [" ", " ", " ", " ", " ", " ", " ", " ", "↵", "↵"]
+console.log(h.replace(/\s/g, '')); // thehelloworld!
+
+// (?=) | 앞쪽 일치 (Lookahead)
+console.log(str.match(/.{1,}(?=@)/g)); // ["thesecon"]
+
+// (?<=) | 뒤쪽 일치 (Lookbehind)
+console.log(str.match(/(?<=@).{1,}/g)); // ["gmail.com"]
